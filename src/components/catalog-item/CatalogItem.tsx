@@ -1,7 +1,7 @@
-import { Heart, ShoppingBag, Sparkles } from 'lucide-react'
+import { Heart, RefreshCw, ShoppingBag, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { fetchProducts } from '../../api/products'
-import { type Product, useAppStore } from '../../store/appStore'
+import { useAppStore } from '../../store/appStore'
 import './CatalogItem.css'
 
 type CatalogItemProps = {
@@ -31,21 +31,23 @@ export function CatalogItem({
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
+	const [imgLoaded, setImgLoaded] = useState<Record<string, boolean>>({})
+
+	const load = async () => {
+		setIsLoading(true)
+		setError('')
+		try {
+			const data = await fetchProducts()
+			setProducts(data ?? [])
+		} catch (err) {
+			setError(err instanceof Error ? err.message : 'Server bilan bog‘lanib bo‘lmadi')
+		}
+		setIsLoading(false)
+	}
 
 	useEffect(() => {
 		if (safeProducts.length > 0) return
-
-		setIsLoading(true)
-
-		fetchProducts()
-			.then((data: Product[]) => {
-				setProducts(data ?? [])
-				setError('')
-			})
-			.catch(() => {
-				setError('Products are unavailable right now.')
-			})
-			.finally(() => setIsLoading(false))
+		load()
 	}, [safeProducts.length, setProducts])
 
 	const filteredProducts = useMemo(() => {
@@ -89,8 +91,12 @@ export function CatalogItem({
 		return (
 			<div className='catalog-state'>
 				<Sparkles size={28} />
-				<h3>{error}</h3>
-				<p>Please check the store server and try again.</p>
+				<h3>Mahsulotlarni yuklab bo‘lmadi</h3>
+				<p>{error}</p>
+				<button className='catalog-state__retry' type='button' onClick={load}>
+					<RefreshCw size={18} />
+					Qayta urinish
+				</button>
 			</div>
 		)
 	}
@@ -99,11 +105,11 @@ export function CatalogItem({
 		return (
 			<div className='catalog-state'>
 				<Sparkles size={28} />
-				<h3>{onlyFavorites ? 'No favorites yet' : 'No pieces found'}</h3>
+				<h3>{onlyFavorites ? 'Sevimlilar yo‘q' : 'Mahsulot topilmadi'}</h3>
 				<p>
 					{onlyFavorites
-						? 'Explore the catalog and tap the heart icon to save items.'
-						: 'Try a different search term.'}
+						? 'Katalogni ko‘rib chiqing va yoqtirgan mahsulotlarni saqlang.'
+						: 'Boshqa qidiruv so‘zini kiriting.'}
 				</p>
 			</div>
 		)
@@ -144,7 +150,13 @@ export function CatalogItem({
 								<Heart size={21} strokeWidth={2.1} fill='currentColor' />
 							</button>
 
-							<img src={product.images?.[0] || ''} alt={product.title} />
+							{!imgLoaded[product.id] && <div className='catalog_item-img-skeleton' />}
+							<img
+								src={product.images?.[0] || ''}
+								alt={product.title}
+								onLoad={() => setImgLoaded(p => ({ ...p, [product.id]: true }))}
+								style={{ display: imgLoaded[product.id] ? 'block' : 'none' }}
+							/>
 						</div>
 
 						<div className='catalog_item-body'>

@@ -189,6 +189,41 @@
 	font-size: 22px;
 }
 
+.catalog-state p {
+	font-size: 14px;
+	max-width: 280px;
+}
+
+.catalog-state__retry {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+	padding: 10px 20px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--gold);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	font-family: inherit;
+	transition: opacity 0.2s;
+}
+
+.catalog-state__retry:hover {
+	opacity: 0.85;
+}
+
+.catalog_item-img-skeleton {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, #eee7df, #fbf8f4, #eee7df);
+	background-size: 220% 100%;
+	animation: shimmer 1.15s infinite linear;
+	border-radius: inherit;
+}
+
 .catalog_item-action--loading {
 	cursor: default;
 }

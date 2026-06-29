@@ -1,6 +1,8 @@
 import {
 	ArrowLeft,
 	CheckCircle2,
+	ChevronLeft,
+	ChevronRight,
 	Heart,
 	MessageCircle,
 	Minus,
@@ -8,7 +10,7 @@ import {
 	ShoppingBag,
 	Sparkles,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useAppStore } from '../../store/appStore'
 import './ProductItem.css'
 
@@ -28,11 +30,38 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 	const toggleFavorite = useAppStore(s => s.toggleFavorite)
 
 	const [slideIndex, setSlideIndex] = useState(0)
+	const swipeRef = useRef({ startX: 0, startY: 0, dx: 0 })
+	const trackRef = useRef<HTMLDivElement>(null)
 
 	if (!product) return null
 
 	const images = product.images?.length ? product.images : ['']
 	const isLiked = favoriteIds.includes(product.id)
+
+	const goNext = useCallback(() => {
+		setSlideIndex(i => Math.min(i + 1, images.length - 1))
+	}, [images.length])
+
+	const goPrev = useCallback(() => {
+		setSlideIndex(i => Math.max(i - 1, 0))
+	}, [])
+
+	const handleTouchStart = useCallback((e: React.TouchEvent) => {
+		const t = e.touches[0]
+		swipeRef.current = { startX: t.clientX, startY: t.clientY, dx: 0 }
+	}, [])
+
+	const handleTouchMove = useCallback((e: React.TouchEvent) => {
+		const t = e.touches[0]
+		swipeRef.current.dx = t.clientX - swipeRef.current.startX
+	}, [])
+
+	const handleTouchEnd = useCallback(() => {
+		const { dx } = swipeRef.current
+		if (Math.abs(dx) > 50) {
+			dx > 0 ? goPrev() : goNext()
+		}
+	}, [goNext, goPrev])
 
 	return (
 		<section className='product_item'>
@@ -58,8 +87,14 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 					<Heart size={21} fill='currentColor' />
 				</button>
 
-				<div className='product_item-slider'>
+				<div
+					className='product_item-slider'
+					onTouchStart={handleTouchStart}
+					onTouchMove={handleTouchMove}
+					onTouchEnd={handleTouchEnd}
+				>
 					<div
+						ref={trackRef}
 						className='product_item-slider-track'
 						style={{ transform: `translateX(-${slideIndex * 100}%)` }}
 					>
@@ -75,19 +110,59 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 					</div>
 
 					{images.length > 1 && (
-						<div className='product_item-dots'>
-							{images.map((_, i) => (
-								<button
-									key={i}
-									className={`product_item-dot ${i === slideIndex ? 'product_item-dot--active' : ''}`}
-									onClick={() => setSlideIndex(i)}
-									aria-label={`Rasm ${i + 1}`}
-								/>
-							))}
-						</div>
+						<>
+							<button
+								className='product_item-arrow product_item-arrow--left'
+								type='button'
+								aria-label='Oldingi rasm'
+								onClick={goPrev}
+								disabled={slideIndex === 0}
+							>
+								<ChevronLeft size={28} />
+							</button>
+							<button
+								className='product_item-arrow product_item-arrow--right'
+								type='button'
+								aria-label='Keyingi rasm'
+								onClick={goNext}
+								disabled={slideIndex === images.length - 1}
+							>
+								<ChevronRight size={28} />
+							</button>
+							<div className='product_item-dots'>
+								{images.map((_, i) => (
+									<button
+										key={i}
+										className={`product_item-dot ${i === slideIndex ? 'product_item-dot--active' : ''}`}
+										onClick={() => setSlideIndex(i)}
+										aria-label={`Rasm ${i + 1}`}
+									/>
+								))}
+							</div>
+						</>
 					)}
 				</div>
 			</div>
+
+			{images.length > 1 && (
+				<div className='product_item-thumbs'>
+					{images.map((src, i) => (
+						<button
+							key={i}
+							className={`product_item-thumb ${i === slideIndex ? 'product_item-thumb--active' : ''}`}
+							onClick={() => setSlideIndex(i)}
+							type='button'
+							aria-label={`Rasm ${i + 1}`}
+						>
+							{src ? (
+								<img src={src} alt={`${product.title} ${i + 1}`} />
+							) : (
+								<div className='product_item-thumb-empty' />
+							)}
+						</button>
+					))}
+				</div>
+			)}
 
 			<div className='product_item-content'>
 				<div className='product_item-heading'>
