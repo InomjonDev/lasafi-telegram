@@ -6,6 +6,7 @@ export type Product = {
 	price: number
 	images: string[]
 	description: string
+	quantity: number
 }
 
 const FAVORITES_KEY = 'lasafi-liked-products'
