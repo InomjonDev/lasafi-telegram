@@ -174,32 +174,135 @@
 	animation: spin 0.7s linear infinite;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
 	.catalog {
-		padding: 12px;
+		padding: 10px;
+	}
+
+	.catalogShell {
+		padding-bottom: 20px;
 	}
 
 	.catalogHero {
-		padding: 20px;
-		border-radius: 26px;
+		padding: 16px;
+		border-radius: 22px;
+	}
+
+	.catalogHeroTop {
+		gap: 12px;
+	}
+
+	.catalogHero h1 {
+		font-size: clamp(26px, 7vw, 38px);
+	}
+
+	.catalogHeroCopy {
+		font-size: 13px;
+		margin-top: 8px;
 	}
 
 	.brandMark {
-		width: 50px;
-		height: 50px;
-		border-radius: 18px;
+		width: 44px;
+		height: 44px;
+		border-radius: 14px;
+	}
+
+	.searchRow {
+		gap: 8px;
 	}
 
 	.catalogSearch {
-		min-height: 52px;
-		border-radius: 18px;
+		min-height: 44px;
+		border-radius: 14px;
+		margin-top: 16px;
+		padding: 0 12px;
+		gap: 8px;
 	}
 
 	.catalogSearch input {
 		font-size: 14px;
 	}
 
+	.favoriresBtn {
+		width: 44px;
+		height: 44px;
+		margin-top: 16px;
+	}
+
+	.sectionHeading {
+		margin: 18px 2px 12px;
+		gap: 10px;
+	}
+
 	.sectionHeading h2 {
+		font-size: 18px;
+	}
+
+	.sectionHeading p {
+		font-size: 11px;
+	}
+}
+
+@media (max-width: 380px) {
+	.catalog {
+		padding: 6px;
+	}
+
+	.catalogShell {
+		padding-bottom: 12px;
+	}
+
+	.catalogHero {
+		padding: 12px;
+		border-radius: 18px;
+	}
+
+	.catalogHeroTop {
+		gap: 8px;
+	}
+
+	.catalogHero h1 {
 		font-size: 22px;
+	}
+
+	.catalogHeroCopy {
+		font-size: 12px;
+		margin-top: 6px;
+	}
+
+	.brandMark {
+		width: 38px;
+		height: 38px;
+		border-radius: 12px;
+	}
+
+	.searchRow {
+		gap: 6px;
+	}
+
+	.catalogSearch {
+		min-height: 38px;
+		border-radius: 12px;
+		margin-top: 12px;
+		padding: 0 10px;
+		gap: 6px;
+	}
+
+	.catalogSearch input {
+		font-size: 12px;
+	}
+
+	.favoriresBtn {
+		width: 38px;
+		height: 38px;
+		margin-top: 12px;
+	}
+
+	.sectionHeading {
+		margin: 14px 1px 8px;
+	}
+
+	.sectionHeading h2 {
+		font-size: 16px;
 	}
 }

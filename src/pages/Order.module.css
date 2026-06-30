@@ -206,7 +206,7 @@
 	margin-top: 4px;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
 	.orderPage {
 		padding: 12px;
 	}
@@ -214,5 +214,96 @@
 	.orderCard {
 		padding: 16px;
 		border-radius: 26px;
+		gap: 16px;
+	}
+
+	.orderCardProduct {
+		grid-template-columns: 80px 1fr;
+		gap: 12px;
+		padding: 8px;
+		border-radius: 20px;
+	}
+
+	.orderCardProduct img {
+		width: 80px;
+		height: 80px;
+		border-radius: 14px;
+	}
+
+	.orderCardProduct h1 {
+		font-size: 18px;
+	}
+
+	.orderCardProduct span {
+		font-size: 16px;
+	}
+
+	.orderForm {
+		gap: 14px;
+	}
+
+	.inputShell {
+		min-height: 50px;
+	}
+
+	.orderSubmit {
+		min-height: 48px;
+	}
+}
+
+@media (max-width: 380px) {
+	.orderPage {
+		padding: 8px;
+	}
+
+	.orderCard {
+		padding: 12px;
+		border-radius: 22px;
+		gap: 14px;
+	}
+
+	.orderCardProduct {
+		grid-template-columns: 66px 1fr;
+		gap: 10px;
+		padding: 6px;
+		border-radius: 18px;
+	}
+
+	.orderCardProduct img {
+		width: 66px;
+		height: 66px;
+		border-radius: 12px;
+	}
+
+	.orderCardProduct h1 {
+		font-size: 16px;
+		margin-top: 3px;
+	}
+
+	.orderCardProduct span {
+		font-size: 14px;
+		margin-top: 5px;
+	}
+
+	.orderForm {
+		gap: 12px;
+	}
+
+	.inputShell {
+		min-height: 44px;
+		border-radius: 14px;
+		padding: 0 12px;
+	}
+
+	.inputShell input {
+		font-size: 14px;
+	}
+
+	.orderSuccess {
+		padding: 24px 16px;
+	}
+
+	.orderSuccess h1 {
+		font-size: 24px;
 	}
 }

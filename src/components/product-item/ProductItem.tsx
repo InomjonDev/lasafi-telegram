@@ -31,6 +31,7 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 	const [slideIndex, setSlideIndex] = useState(0)
 	const swipeRef = useRef({ startX: 0, startY: 0, dx: 0 })
 	const trackRef = useRef<HTMLDivElement>(null)
+	const thumbsRef = useRef<HTMLDivElement>(null)
 
 	const [lightboxOpen, setLightboxOpen] = useState(false)
 	const [lightboxIndex, setLightboxIndex] = useState(0)
@@ -46,10 +47,21 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 		return () => window.removeEventListener('keydown', handler)
 	})
 
+	useEffect(() => {
+		const container = thumbsRef.current
+		if (!container) return
+		const active = container.children[slideIndex] as HTMLElement | undefined
+		if (active) {
+			active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+		}
+	}, [slideIndex])
+
 	if (!product) return null
 
 	const images = product.images?.length ? product.images : ['']
 	const isLiked = favoriteIds.includes(product.id)
+
+	const slideOffset = -slideIndex * 100
 
 	const goNext = useCallback(() => {
 		setSlideIndex(i => Math.min(i + 1, images.length - 1))
@@ -114,7 +126,7 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 					<div
 						ref={trackRef}
 						className={styles.productItemSliderTrack}
-						style={{ '--slide-offset': `${-slideIndex * 100}%` } as React.CSSProperties}
+						style={{ '--slide-offset': `${slideOffset}%` } as React.CSSProperties}
 					>
 						{images.map((src, i) => (
 							<div key={i} className={styles.productItemSlide}>
@@ -167,7 +179,7 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 			</div>
 
 			{images.length > 1 && (
-				<div className={styles.productItemThumbs}>
+				<div className={styles.productItemThumbs} ref={thumbsRef}>
 					{images.map((src, i) => (
 						<button
 							key={i}

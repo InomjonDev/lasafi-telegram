@@ -50,7 +50,14 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 	}
 
 	const submit = async () => {
-		if (!product || isSubmitting || !name.trim() || !isPhoneValid || !address.trim()) return
+		if (
+			!product ||
+			isSubmitting ||
+			!name.trim() ||
+			!isPhoneValid ||
+			!address.trim()
+		)
+			return
 
 		setIsSubmitting(true)
 
@@ -102,7 +109,7 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 			<section className={styles.orderCard}>
 				<button className={styles.orderBack} type='button' onClick={goBack}>
 					<ArrowLeft size={20} />
-					Product
+					Orqaga
 				</button>
 
 				<div className={styles.orderCardProduct}>
@@ -147,7 +154,9 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 
 					<label>
 						<span>Yetkazib berish manzili</span>
-						<div className={`${styles.inputShell} ${styles.inputShellTextarea}`}>
+						<div
+							className={`${styles.inputShell} ${styles.inputShellTextarea}`}
+						>
 							<MapPin size={19} />
 							<textarea
 								value={address}
@@ -161,7 +170,9 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 				<button
 					className={`primary-button ${styles.orderSubmit}`}
 					type='button'
-					disabled={isSubmitting || !name.trim() || !isPhoneValid || !address.trim()}
+					disabled={
+						isSubmitting || !name.trim() || !isPhoneValid || !address.trim()
+					}
 					onClick={submit}
 				>
 					{isSubmitting ? (

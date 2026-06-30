@@ -85,19 +85,64 @@
 	margin-bottom: 12px;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
 	.catalog {
 		padding: 12px;
 	}
 
+	.catalogShell {
+		padding-bottom: 20px;
+	}
+
 	.catalogHero {
-		padding: 20px;
-		border-radius: 26px;
+		padding: 18px;
+		border-radius: 24px;
+	}
+
+	.catalogHero h1 {
+		font-size: clamp(28px, 7vw, 40px);
 	}
 
 	.brandMark {
-		width: 50px;
-		height: 50px;
-		border-radius: 18px;
+		width: 48px;
+		height: 48px;
+		border-radius: 16px;
+	}
+
+	.sectionHeading {
+		margin: 22px 2px 14px;
+	}
+
+	.sectionHeading p {
+		font-size: 12px;
+	}
+}
+
+@media (max-width: 380px) {
+	.catalog {
+		padding: 8px;
+	}
+
+	.catalogShell {
+		padding-bottom: 14px;
+	}
+
+	.catalogHero {
+		padding: 14px;
+		border-radius: 20px;
+	}
+
+	.catalogHero h1 {
+		font-size: 24px;
+	}
+
+	.brandMark {
+		width: 42px;
+		height: 42px;
+		border-radius: 14px;
+	}
+
+	.sectionHeading {
+		margin: 18px 1px 10px;
 	}
 }
