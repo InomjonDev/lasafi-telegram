@@ -1,0 +1,218 @@
+.orderPage {
+	width: 100%;
+	min-height: 100vh;
+	padding: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.orderCard,
+.orderSuccess {
+	width: min(100%, 520px);
+	border: 1px solid rgba(255, 255, 255, 0.72);
+	border-radius: 30px;
+	background: rgba(255, 255, 255, 0.88);
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(18px);
+}
+
+.orderCard {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 22px;
+}
+
+.orderBack {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	width: fit-content;
+	border: 0;
+	background: transparent;
+	color: var(--muted);
+	font-weight: 800;
+	cursor: pointer;
+}
+
+.orderCardProduct {
+	display: grid;
+	grid-template-columns: 96px 1fr;
+	gap: 15px;
+	align-items: center;
+	padding: 10px;
+	border: 1px solid var(--line);
+	border-radius: 24px;
+	background: linear-gradient(
+		145deg,
+		rgba(255, 255, 255, 0.92),
+		rgba(246, 241, 235, 0.88)
+	);
+}
+
+.orderCardProduct img {
+	width: 96px;
+	height: 96px;
+	border-radius: 18px;
+	object-fit: contain;
+	background: #f1ebe3;
+}
+
+.orderCardProduct p {
+	color: var(--gold);
+	font-size: 12px;
+	font-weight: 800;
+	text-transform: uppercase;
+}
+
+.orderCardProduct h1 {
+	margin-top: 5px;
+	color: var(--ink);
+	font-size: 22px;
+	line-height: 1.1;
+}
+
+.orderCardProduct span {
+	display: inline-block;
+	margin-top: 8px;
+	color: var(--charcoal);
+	font-size: 18px;
+	font-weight: 800;
+}
+
+.orderCardProduct strong {
+	display: block;
+	margin-top: 5px;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 800;
+}
+
+.orderForm {
+	display: grid;
+	gap: 16px;
+}
+
+.orderForm label {
+	display: grid;
+	gap: 8px;
+	color: var(--ink);
+	font-size: 14px;
+	font-weight: 800;
+}
+
+.inputShell {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 56px;
+	padding: 0 15px;
+	border: 1px solid rgba(42, 35, 54, 0.11);
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.78);
+	color: var(--gold);
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.inputShell:focus-within {
+	border-color: rgba(185, 144, 75, 0.52);
+	box-shadow: 0 0 0 4px rgba(185, 144, 75, 0.1);
+}
+
+.inputShell input,
+.inputShell textarea {
+	width: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--ink);
+	font-size: 16px;
+}
+
+.inputShell textarea {
+	min-height: 92px;
+	padding: 16px 0;
+	resize: none;
+}
+
+.inputShellTextarea {
+	align-items: flex-start;
+}
+
+.inputShellTextarea svg {
+	margin-top: 16px;
+}
+
+.orderSubmit {
+	width: 100%;
+}
+
+.orderNote {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 14px;
+	border: 1px solid rgba(185, 144, 75, 0.18);
+	border-radius: 18px;
+	background: rgba(185, 144, 75, 0.08);
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.45;
+}
+
+.orderNote svg {
+	flex: 0 0 auto;
+	color: var(--gold);
+}
+
+.orderSuccess {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 16px;
+	padding: 34px 24px;
+	text-align: center;
+}
+
+.orderSuccess > div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 74px;
+	height: 74px;
+	border-radius: 26px;
+	background: rgba(185, 144, 75, 0.13);
+	color: var(--gold);
+}
+
+.orderSuccess h1 {
+	color: var(--ink);
+	font-size: 32px;
+	line-height: 1;
+}
+
+.orderSuccess p {
+	max-width: 320px;
+	color: var(--muted);
+	line-height: 1.55;
+}
+
+.orderSuccess :global(.primary-button) {
+	width: 100%;
+	margin-top: 4px;
+}
+
+@media (max-width: 520px) {
+	.orderPage {
+		padding: 12px;
+	}
+
+	.orderCard {
+		padding: 16px;
+		border-radius: 26px;
+	}
+}

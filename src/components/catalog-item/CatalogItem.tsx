@@ -2,16 +2,14 @@ import { Heart, RefreshCw, ShoppingBag, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { fetchProducts } from '../../api/products'
 import { useAppStore } from '../../store/appStore'
-import './CatalogItem.css'
+import { formatPrice } from '../../utils/format'
+import styles from './CatalogItem.module.css'
 
 type CatalogItemProps = {
 	query: string
 	onOpen: () => void
 	onlyFavorites?: boolean
 }
-
-const formatPrice = (price: number) =>
-	new Intl.NumberFormat('uz-UZ').format(price)
 
 export function CatalogItem({
 	query,
@@ -71,16 +69,16 @@ export function CatalogItem({
 
 	if (isLoading) {
 		return (
-			<div className='catalog_item'>
+			<div className={styles.catalogItem}>
 				{Array.from({ length: 4 }).map((_, index) => (
 					<div
-						className='catalog_item-action catalog_item-action--loading'
+						className={`${styles.catalogItemAction} ${styles.catalogItemActionLoading}`}
 						key={index}
 					>
-						<div className='catalog_item-img' />
-						<div className='catalog_item-skeleton catalog_item-skeleton--title' />
-						<div className='catalog_item-skeleton' />
-						<div className='catalog_item-skeleton catalog_item-skeleton--price' />
+						<div className={styles.catalogItemImg} />
+						<div className={`${styles.catalogItemSkeleton} ${styles.catalogItemSkeletonTitle}`} />
+						<div className={styles.catalogItemSkeleton} />
+						<div className={`${styles.catalogItemSkeleton} ${styles.catalogItemSkeletonPrice}`} />
 					</div>
 				))}
 			</div>
@@ -89,11 +87,11 @@ export function CatalogItem({
 
 	if (error) {
 		return (
-			<div className='catalog-state'>
+			<div className={styles.catalogState}>
 				<Sparkles size={28} />
 				<h3>Mahsulotlarni yuklab bo‘lmadi</h3>
 				<p>{error}</p>
-				<button className='catalog-state__retry' type='button' onClick={load}>
+				<button className={styles.catalogStateRetry} type='button' onClick={load}>
 					<RefreshCw size={18} />
 					Qayta urinish
 				</button>
@@ -103,7 +101,7 @@ export function CatalogItem({
 
 	if (filteredProducts.length === 0) {
 		return (
-			<div className='catalog-state'>
+			<div className={styles.catalogState}>
 				<Sparkles size={28} />
 				<h3>{onlyFavorites ? 'Sevimlilar yo‘q' : 'Mahsulot topilmadi'}</h3>
 				<p>
@@ -116,7 +114,7 @@ export function CatalogItem({
 	}
 
 	return (
-		<div className='catalog_item'>
+		<div className={styles.catalogItem}>
 			{filteredProducts.map(product => {
 				const isLiked = safeFavoriteIds.includes(product.id)
 
@@ -127,16 +125,16 @@ export function CatalogItem({
 
 				return (
 					<article
-						className='catalog_item-action'
+						className={styles.catalogItemAction}
 						key={product.id}
 						onClick={openProduct}
 					>
-						<div className='catalog_item-img'>
-							<div className='catalog_item-label'>Qo‘lda</div>
+						<div className={styles.catalogItemImg}>
+							<div className={styles.catalogItemLabel}>Qo‘lda</div>
 
 							<button
-								className={`catalog_item-like ${
-									isLiked ? 'catalog_item-like--active' : ''
+								className={`${styles.catalogItemLike} ${
+									isLiked ? styles.catalogItemLikeActive : ''
 								}`}
 								type='button'
 								aria-label={
@@ -150,25 +148,25 @@ export function CatalogItem({
 								<Heart size={21} strokeWidth={2.1} fill='currentColor' />
 							</button>
 
-							{!imgLoaded[product.id] && <div className='catalog_item-img-skeleton' />}
+							{!imgLoaded[product.id] && <div className={styles.catalogItemImgSkeleton} />}
 							<img
 								src={product.images?.[0] || ''}
 								alt={product.title}
 								onLoad={() => setImgLoaded(p => ({ ...p, [product.id]: true }))}
-								style={{ display: imgLoaded[product.id] ? 'block' : 'none' }}
+								className={imgLoaded[product.id] ? styles.imgVisible : styles.imgHidden}
 							/>
 						</div>
 
-						<div className='catalog_item-body'>
+						<div className={styles.catalogItemBody}>
 							<h3>{product.title}</h3>
 
-							<p className='catalog_item-description'>{product.description}</p>
+							<p className={styles.catalogItemDescription}>{product.description}</p>
 
-							<div className='catalog_item-price-row'>
+							<div className={styles.catalogItemPriceRow}>
 								<p>{formatPrice(product.price)} UZS</p>
 							</div>
 
-							<div className='catalog_item-cta'>
+							<div className={styles.catalogItemCta}>
 								<ShoppingBag size={17} strokeWidth={2.2} />
 								<span>Mahsulotni ko‘rish</span>
 							</div>

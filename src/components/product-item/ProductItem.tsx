@@ -9,18 +9,17 @@ import {
 	Plus,
 	ShoppingBag,
 	Sparkles,
+	X,
 } from 'lucide-react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppStore } from '../../store/appStore'
-import './ProductItem.css'
+import { formatPrice } from '../../utils/format'
+import styles from './ProductItem.module.css'
 
 type ProductItemProps = {
 	goBack: () => void
 	goOrder: () => void
 }
-
-const formatPrice = (price: number) =>
-	new Intl.NumberFormat('uz-UZ').format(price)
 
 export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 	const product = useAppStore(s => s.selectedProduct)
@@ -32,6 +31,20 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 	const [slideIndex, setSlideIndex] = useState(0)
 	const swipeRef = useRef({ startX: 0, startY: 0, dx: 0 })
 	const trackRef = useRef<HTMLDivElement>(null)
+
+	const [lightboxOpen, setLightboxOpen] = useState(false)
+	const [lightboxIndex, setLightboxIndex] = useState(0)
+
+	useEffect(() => {
+		if (!lightboxOpen) return
+		const handler = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') setLightboxOpen(false)
+			if (e.key === 'ArrowLeft') setLightboxIndex(i => Math.max(i - 1, 0))
+			if (e.key === 'ArrowRight') setLightboxIndex(i => Math.min(i + 1, images.length - 1))
+		}
+		window.addEventListener('keydown', handler)
+		return () => window.removeEventListener('keydown', handler)
+	})
 
 	if (!product) return null
 
@@ -63,23 +76,28 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 		}
 	}, [goNext, goPrev])
 
+	const openLightbox = (index: number) => {
+		setLightboxIndex(index)
+		setLightboxOpen(true)
+	}
+
 	return (
-		<section className='product_item'>
-			<div className='product_item-media'>
+		<section className={styles.productItem}>
+			<div className={styles.productItemMedia}>
 				<button
-					className='icon-button product_item-back'
+					className={`icon-button ${styles.productItemBack}`}
 					type='button'
 					aria-label='Back to catalog'
 					onClick={goBack}
 				>
 					<ArrowLeft size={22} />
 				</button>
-				<span className='product_item-badge'>
+				<span className={styles.productItemBadge}>
 					<Sparkles size={15} />
 					Qo‘l mehnati
 				</span>
 				<button
-					className={`icon-button product_item-like ${isLiked ? 'product_item-like--active' : ''}`}
+					className={`icon-button ${styles.productItemLike} ${isLiked ? styles.productItemLikeActive : ''}`}
 					type='button'
 					aria-label={isLiked ? 'Unlike product' : 'Like product'}
 					onClick={() => toggleFavorite(product.id)}
@@ -88,22 +106,26 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 				</button>
 
 				<div
-					className='product_item-slider'
+					className={styles.productItemSlider}
 					onTouchStart={handleTouchStart}
 					onTouchMove={handleTouchMove}
 					onTouchEnd={handleTouchEnd}
 				>
 					<div
 						ref={trackRef}
-						className='product_item-slider-track'
-						style={{ transform: `translateX(-${slideIndex * 100}%)` }}
+						className={styles.productItemSliderTrack}
+						style={{ '--slide-offset': `${-slideIndex * 100}%` } as React.CSSProperties}
 					>
 						{images.map((src, i) => (
-							<div key={i} className='product_item-slide'>
+							<div key={i} className={styles.productItemSlide}>
 								{src ? (
-									<img src={src} alt={`${product.title} ${i + 1}`} />
+									<img
+										src={src}
+										alt={`${product.title} ${i + 1}`}
+										onClick={() => openLightbox(i)}
+									/>
 								) : (
-									<div className='product_item-slide-empty' />
+									<div className={styles.productItemSlideEmpty} />
 								)}
 							</div>
 						))}
@@ -112,7 +134,7 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 					{images.length > 1 && (
 						<>
 							<button
-								className='product_item-arrow product_item-arrow--left'
+								className={`${styles.productItemArrow} ${styles.productItemArrowLeft}`}
 								type='button'
 								aria-label='Oldingi rasm'
 								onClick={goPrev}
@@ -121,7 +143,7 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 								<ChevronLeft size={28} />
 							</button>
 							<button
-								className='product_item-arrow product_item-arrow--right'
+								className={`${styles.productItemArrow} ${styles.productItemArrowRight}`}
 								type='button'
 								aria-label='Keyingi rasm'
 								onClick={goNext}
@@ -129,11 +151,11 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 							>
 								<ChevronRight size={28} />
 							</button>
-							<div className='product_item-dots'>
+							<div className={styles.productItemDots}>
 								{images.map((_, i) => (
 									<button
 										key={i}
-										className={`product_item-dot ${i === slideIndex ? 'product_item-dot--active' : ''}`}
+										className={`${styles.productItemDot} ${i === slideIndex ? styles.productItemDotActive : ''}`}
 										onClick={() => setSlideIndex(i)}
 										aria-label={`Rasm ${i + 1}`}
 									/>
@@ -145,11 +167,11 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 			</div>
 
 			{images.length > 1 && (
-				<div className='product_item-thumbs'>
+				<div className={styles.productItemThumbs}>
 					{images.map((src, i) => (
 						<button
 							key={i}
-							className={`product_item-thumb ${i === slideIndex ? 'product_item-thumb--active' : ''}`}
+							className={`${styles.productItemThumb} ${i === slideIndex ? styles.productItemThumbActive : ''}`}
 							onClick={() => setSlideIndex(i)}
 							type='button'
 							aria-label={`Rasm ${i + 1}`}
@@ -157,25 +179,25 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 							{src ? (
 								<img src={src} alt={`${product.title} ${i + 1}`} />
 							) : (
-								<div className='product_item-thumb-empty' />
+								<div className={styles.productItemThumbEmpty} />
 							)}
 						</button>
 					))}
 				</div>
 			)}
 
-			<div className='product_item-content'>
-				<div className='product_item-heading'>
+			<div className={styles.productItemContent}>
+				<div className={styles.productItemHeading}>
 					<p>Diadem store</p>
 					<h1>{product.title}</h1>
 				</div>
 
-				<div className='product_item-price'>
+				<div className={styles.productItemPrice}>
 					{formatPrice(product.price)} UZS
 				</div>
-				<p className='product_item-description'>{product.description}</p>
+				<p className={styles.productItemDescription}>{product.description}</p>
 
-				<div className='product_item-notes'>
+				<div className={styles.productItemNotes}>
 					<div>
 						<CheckCircle2 size={19} />
 						<span>
@@ -191,8 +213,8 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 				</div>
 			</div>
 
-			<div className='product_item-bar'>
-				<div className='quantity-control' aria-label='Quantity'>
+			<div className={styles.productItemBar}>
+				<div className={styles.quantityControl} aria-label='Quantity'>
 					<button
 						type='button'
 						aria-label='Decrease quantity'
@@ -214,6 +236,63 @@ export function ProductItem({ goBack, goOrder }: ProductItemProps) {
 					Buyurtma berish
 				</button>
 			</div>
+
+			{lightboxOpen && (
+				<div
+					className={styles.lightboxOverlay}
+					onClick={() => setLightboxOpen(false)}
+				>
+					<button
+						className={styles.lightboxClose}
+						onClick={() => setLightboxOpen(false)}
+						aria-label='Close lightbox'
+					>
+						<X size={28} />
+					</button>
+					{images.length > 1 && (
+						<button
+							className={styles.lightboxPrev}
+							onClick={e => { e.stopPropagation(); setLightboxIndex(i => Math.max(i - 1, 0)) }}
+							disabled={lightboxIndex === 0}
+							aria-label='Previous image'
+						>
+							<ChevronLeft size={28} />
+						</button>
+					)}
+					<div
+						className={styles.lightboxContent}
+						onClick={e => e.stopPropagation()}
+					>
+						<img
+							className={styles.lightboxImg}
+							src={images[lightboxIndex]}
+							alt={`${product.title} ${lightboxIndex + 1}`}
+						/>
+					</div>
+					{images.length > 1 && (
+						<button
+							className={styles.lightboxNext}
+							onClick={e => { e.stopPropagation(); setLightboxIndex(i => Math.min(i + 1, images.length - 1)) }}
+							disabled={lightboxIndex === images.length - 1}
+							aria-label='Next image'
+						>
+							<ChevronRight size={28} />
+						</button>
+					)}
+					{images.length > 1 && (
+						<div className={styles.lightboxDots}>
+							{images.map((_, i) => (
+								<button
+									key={i}
+									className={`${styles.lightboxDot} ${i === lightboxIndex ? styles.lightboxDotActive : ''}`}
+									onClick={() => setLightboxIndex(i)}
+									aria-label={`Image ${i + 1}`}
+								/>
+							))}
+						</div>
+					)}
+				</div>
+			)}
 		</section>
 	)
 }

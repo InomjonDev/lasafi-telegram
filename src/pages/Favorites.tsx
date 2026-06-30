@@ -1,7 +1,7 @@
 import { ChevronLeft, Heart } from 'lucide-react'
 import { CatalogItem } from '../components/catalog-item/CatalogItem'
 import { useAppStore } from '../store/appStore'
-import './page-styles.css'
+import styles from './Favorites.module.css'
 
 type FavoritesProps = {
 	goBack: () => void
@@ -12,28 +12,27 @@ export default function Favorites({ goBack, onOpenProduct }: FavoritesProps) {
 	const favoriteIds = useAppStore(s => s.favoriteIds)
 
 	return (
-		<div className='catalog'>
-			<section className='catalog-shell'>
-		<header className='catalog-hero'>
+		<div className={styles.catalog}>
+			<section className={styles.catalogShell}>
+		<header className={styles.catalogHero}>
 				<button
-					className='order-back'
+					className={styles.orderBack}
 					onClick={goBack}
-					style={{ marginBottom: '12px' }}
 				>
 					<ChevronLeft size={20} />
 					Katalogga qaytish
 				</button>
-				<div className='catalog-hero__top'>
+				<div className={styles.catalogHeroTop}>
 					<div>
 						<h1>Sevimlilar</h1>
 					</div>
-					<div className='brand-mark' aria-hidden='true'>
+					<div className={styles.brandMark} aria-hidden='true'>
 						<Heart size={30} strokeWidth={1.9} fill='currentColor' />
 					</div>
 				</div>
 			</header>
 
-			<div className='section-heading'>
+			<div className={styles.sectionHeading}>
 				<div>
 					<p>Saqlangan</p>
 				</div>

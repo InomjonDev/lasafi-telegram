@@ -6,24 +6,24 @@ import {
 	Phone,
 	Send,
 	ShoppingBag,
+	User,
 } from 'lucide-react'
 import { useState } from 'react'
 import { createOrder } from '../api/products'
 import { useAppStore } from '../store/appStore'
-import './page-styles.css'
+import { formatPrice } from '../utils/format'
+import styles from './Order.module.css'
 
 type OrderProps = {
 	goBack: () => void
 	goCatalog: () => void
 }
 
-const formatPrice = (price: number) =>
-	new Intl.NumberFormat('uz-UZ').format(price)
-
 export default function Order({ goBack, goCatalog }: OrderProps) {
 	const product = useAppStore(s => s.selectedProduct)
 	const quantity = useAppStore(s => s.orderQuantity)
 	const user = WebApp.initDataUnsafe?.user
+	const [name, setName] = useState(user?.first_name || '')
 	const [phone, setPhone] = useState('')
 	const [address, setAddress] = useState('')
 	const [isSubmitting, setIsSubmitting] = useState(false)
@@ -50,32 +50,37 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 	}
 
 	const submit = async () => {
-		if (!product || isSubmitting || !isPhoneValid || !address.trim()) return
+		if (!product || isSubmitting || !name.trim() || !isPhoneValid || !address.trim()) return
 
 		setIsSubmitting(true)
 
-		await createOrder({
-			product_id: product.id,
-			product_title: product.title,
-			product_image: product.images?.[0] || '',
-			price: product.price,
-			quantity,
-			total_price: product.price * quantity,
-			customer_name: user?.first_name || 'User',
-			phone,
-			address,
-		})
-
-		setIsSubmitting(false)
-		setIsSent(true)
+		try {
+			await createOrder({
+				product_id: product.id,
+				product_title: product.title,
+				product_image: product.images?.[0] || '',
+				price: product.price,
+				quantity,
+				total_price: product.price * quantity,
+				customer_name: name.trim(),
+				phone,
+				address,
+			})
+			setIsSent(true)
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Xatolik yuz berdi'
+			alert(message)
+		} finally {
+			setIsSubmitting(false)
+		}
 	}
 
 	if (!product) return null
 
 	if (isSent) {
 		return (
-			<main className='order-page'>
-				<section className='order-success'>
+			<main className={styles.orderPage}>
+				<section className={styles.orderSuccess}>
 					<div>
 						<CheckCircle2 size={44} />
 					</div>
@@ -93,14 +98,14 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 	}
 
 	return (
-		<main className='order-page'>
-			<section className='order-card'>
-				<button className='order-back' type='button' onClick={goBack}>
+		<main className={styles.orderPage}>
+			<section className={styles.orderCard}>
+				<button className={styles.orderBack} type='button' onClick={goBack}>
 					<ArrowLeft size={20} />
 					Product
 				</button>
 
-				<div className='order-card__product'>
+				<div className={styles.orderCardProduct}>
 					<img src={product.images?.[0] || ''} alt={product.title} />
 					<div>
 						<p>Buyurtma berish</p>
@@ -112,10 +117,22 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 					</div>
 				</div>
 
-				<div className='order-form'>
+				<div className={styles.orderForm}>
+					<label>
+						<span>Ismingiz</span>
+						<div className={styles.inputShell}>
+							<User size={19} />
+							<input
+								value={name}
+								placeholder='Ismingizni kiriting'
+								onChange={event => setName(event.target.value)}
+							/>
+						</div>
+					</label>
+
 					<label>
 						<span>Telefon raqami</span>
-						<div className='input-shell'>
+						<div className={styles.inputShell}>
 							<Phone size={19} />
 							<input
 								value={phone}
@@ -130,7 +147,7 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 
 					<label>
 						<span>Yetkazib berish manzili</span>
-						<div className='input-shell input-shell--textarea'>
+						<div className={`${styles.inputShell} ${styles.inputShellTextarea}`}>
 							<MapPin size={19} />
 							<textarea
 								value={address}
@@ -142,9 +159,9 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 				</div>
 
 				<button
-					className='primary-button order-submit'
+					className={`primary-button ${styles.orderSubmit}`}
 					type='button'
-					disabled={isSubmitting || !isPhoneValid || !address.trim()}
+					disabled={isSubmitting || !name.trim() || !isPhoneValid || !address.trim()}
 					onClick={submit}
 				>
 					{isSubmitting ? (
@@ -157,7 +174,7 @@ export default function Order({ goBack, goCatalog }: OrderProps) {
 					)}
 				</button>
 
-				<div className='order-note'>
+				<div className={styles.orderNote}>
 					<ShoppingBag size={18} />
 					<span>
 						So‘rovingiz sotuvchiga yuboriladi. To‘lov va yetkazib berish

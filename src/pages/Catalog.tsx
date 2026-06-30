@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { CatalogItem } from '../components/catalog-item/CatalogItem'
 import { useAppStore } from '../store/appStore'
 import { fetchProducts } from '../api/products'
-import './page-styles.css'
+import styles from './Catalog.module.css'
 
 type CatalogProps = {
 	onOpen: () => void
@@ -27,28 +27,28 @@ export default function Catalog({ onOpen, goFavorites }: CatalogProps) {
 	const [query, setQuery] = useState('')
 
 	return (
-		<div className='catalog'>
-			<section className='catalog-shell'>
-		<header className='catalog-hero'>
-				<div className='catalog-hero__top'>
+		<div className={styles.catalog}>
+			<section className={styles.catalogShell}>
+		<header className={styles.catalogHero}>
+				<div className={styles.catalogHeroTop}>
 					<div>
-						<p className='eyebrow'>
+						<p className={styles.eyebrow}>
 							<Sparkles size={15} />
 							Telegram boutique
 						</p>
 						<h1>LaSafi Diadems</h1>
-						<p className='catalog-hero__copy'>
+						<p className={styles.catalogHeroCopy}>
 							Nafis diademlar va qo‘lda tayyorlangan kelinlar uchun
 							aksessuarlar.
 						</p>
 					</div>
-					<div className='brand-mark' aria-hidden='true'>
+					<div className={styles.brandMark} aria-hidden='true'>
 						<Crown size={30} strokeWidth={1.9} />
 					</div>
 				</div>
 
-				<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-					<label className='catalog-search' style={{ flex: 1 }}>
+				<div className={styles.searchRow}>
+					<label className={styles.catalogSearch}>
 						<Search size={21} />
 						<input
 							type='search'
@@ -58,15 +58,14 @@ export default function Catalog({ onOpen, goFavorites }: CatalogProps) {
 						/>
 					</label>
 					<button
-						className='brand-mark favorires-btn'
+						className={`${styles.brandMark} ${styles.favoriresBtn}`}
 						onClick={handleRefresh}
 						aria-label='Refresh'
-						style={{ opacity: refreshing ? 0.5 : 1 }}
 					>
-						<RefreshCw size={22} className={refreshing ? 'spin' : ''} />
+						<RefreshCw size={22} className={refreshing ? styles.spin : ''} />
 					</button>
 					<button
-						className='brand-mark favorires-btn'
+						className={`${styles.brandMark} ${styles.favoriresBtn}`}
 						onClick={goFavorites}
 						aria-label='Favorites'
 					>
@@ -75,7 +74,7 @@ export default function Catalog({ onOpen, goFavorites }: CatalogProps) {
 				</div>
 			</header>
 
-				<div className='section-heading'>
+				<div className={styles.sectionHeading}>
 					<div>
 						<p>Kolleksiya</p>
 						<h2>Sotuvdagi mahsulotlar</h2>
